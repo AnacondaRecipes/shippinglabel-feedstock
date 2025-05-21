@@ -1,0 +1,46 @@
+From 02f1198fbaf250bf51ab04b6e6914a7759c06727 Mon Sep 17 00:00:00 2001
+From: Andrii Osipov <aosipov@anaconda.com>
+Date: Wed, 21 May 2025 05:03:13 -0700
+Subject: [PATCH] removed dependencies from the conftest
+
+---
+ tests/conftest.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/tests/conftest.py b/tests/conftest.py
+index 54ce3d4..2f1f70d 100644
+--- a/tests/conftest.py
++++ b/tests/conftest.py
+@@ -2,8 +2,8 @@
+ from typing import Callable, Type, TypeVar
+ 
+ # 3rd party
+-from apeye.url import URL
+-from betamax import Betamax  # type: ignore
++# from apeye.url import URL
++# from betamax import Betamax  # type: ignore
+ from domdf_python_tools.paths import PathPlus
+ from packaging.tags import Tag
+ from pytest_regressions.data_regression import RegressionYamlDumper
+@@ -12,8 +12,8 @@ pytest_plugins = ("coincidence", )
+ 
+ _C = TypeVar("_C", bound=Callable)
+ 
+-with Betamax.configure() as config:
+-	config.cassette_library_dir = PathPlus(__file__).parent / "cassettes"
++#with Betamax.configure() as config:
++#	config.cassette_library_dir = PathPlus(__file__).parent / "cassettes"
+ 
+ 
+ def _representer_for(*data_type: Type):  # noqa: MAN002
+@@ -27,6 +27,6 @@ def _representer_for(*data_type: Type):  # noqa: MAN002
+ 	return deco
+ 
+ 
+-@_representer_for(URL, Tag)
++#@_representer_for(URL, Tag)
+ def _represent_sequences(dumper: RegressionYamlDumper, data):  # noqa: MAN001,MAN002
+ 	return dumper.represent_str(str(data))
+-- 
+2.39.3 (Apple Git-146)
+
