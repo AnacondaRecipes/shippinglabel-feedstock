@@ -1,0 +1,56 @@
+{% set name = "shippinglabel" %}
+{% set version = "2.3.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/shippinglabel-{{ version }}.tar.gz
+  sha256: 25c0c3194c011c0355dff8f56cc0b31688f693b209f5849d44991d8a2ec91f2f
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: True  # [py<37]
+
+requirements:
+  host:
+    - python
+    - pip
+    - hatchling
+    - hatch-requirements-txt
+  run:
+    - python
+    - dist-meta >=0.1.2
+    - dom-toml >=0.2.2
+    - domdf-python-tools >=3.1.0
+    - packaging >=20.9
+    - typing-extensions >=3.7.4.3
+
+# We can`t enable pytest because conftest uses the coincidence package, which is unavailable on the main channel.
+# The policy states that packages are not specifically built for testing.
+test:
+  imports:
+    - shippinglabel
+  commands:
+    - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+  requires:
+    - pip
+
+about:
+  home: https://github.com/domdfcoding/shippinglabel
+  summary: Utilities for handling packages.
+  license: MIT AND Apache-2.0
+  license_family: MIT
+  license_file:
+    - LICENSE
+    - shippinglabel/_vendor/trove_classifiers/LICENSE
+  description: Utilities for handling packages.
+  doc_url: https://shippinglabel.readthedocs.io
+  dev_url: https://github.com/domdfcoding/shippinglabel
+
+extra:
+  recipe-maintainers:
+    - domdfcoding
