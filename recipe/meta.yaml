@@ -6,15 +6,20 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/shippinglabel-{{ version }}.tar.gz
-  sha256: 25c0c3194c011c0355dff8f56cc0b31688f693b209f5849d44991d8a2ec91f2f
+  url: https://github.com/domdfcoding/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: 17373b3863b9cafa4766d34ccb2e65028b6b2fe949ab820a72a312013c75b9a8
+  patches:
+    - patches/0001-removed-dependencies-from-the-conftest.patch
 
 build:
-  number: 0
+  number: 1
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   skip: True  # [py<37]
 
 requirements:
+  build:
+    - patch  # [not win]
+    - m2-patch  # [win]
   host:
     - python
     - pip
@@ -28,16 +33,22 @@ requirements:
     - packaging >=20.9
     - typing-extensions >=3.7.4.3
 
-# We can`t enable pytest because conftest uses the coincidence package, which is unavailable on the main channel.
-# The policy states that packages are not specifically built for testing.
 test:
+  source_files:
+    - tests
   imports:
     - shippinglabel
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    # ModuleNotFoundError: No module named 'apeye'
+    - pytest -v -k "not (test_list_requirements)" tests
   requires:
     - pip
+    - pytest >=6.0.0
+    - coincidence >=0.2.0
+    - consolekit >=1.1.2
+    - requests >=2.25.1
 
 about:
   home: https://github.com/domdfcoding/shippinglabel
