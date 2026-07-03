@@ -12,14 +12,11 @@ source:
     - patches/0001-removed-dependencies-from-the-conftest.patch
 
 build:
-  number: 1
+  number: 2
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   skip: True  # [py<37]
 
 requirements:
-  build:
-    - patch  # [not win]
-    - m2-patch  # [win]
   host:
     - python
     - pip
@@ -33,6 +30,9 @@ requirements:
     - packaging >=20.9
     - typing-extensions >=3.7.4.3
 
+# cyclic test dependency (restore test once dependency is in)
+# shippinglabel -> coincidence
+# coincidence -> whey -> shippinglabel
 test:
   source_files:
     - tests
@@ -41,14 +41,14 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    # ModuleNotFoundError: No module named 'apeye'
-    - pytest -v -k "not (test_list_requirements)" tests
+#    # ModuleNotFoundError: No module named 'apeye'
+#    - pytest -v -k "not (test_list_requirements)" tests
   requires:
     - pip
     - pytest >=6.0.0
-    - coincidence >=0.2.0
-    - consolekit >=1.1.2
-    - requests >=2.25.1
+#    - coincidence >=0.2.0
+#    - consolekit >=1.1.2
+#    - requests >=2.25.1
 
 about:
   home: https://github.com/domdfcoding/shippinglabel
