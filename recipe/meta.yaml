@@ -43,9 +43,9 @@ test:
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
 #    # ModuleNotFoundError: No module named 'apeye'
 #    - pytest -v -k "not (test_list_requirements)" tests
-#  requires:
-#    - pip
-#    - pytest >=6.0.0
+  requires:
+    - pip
+    - pytest >=6.0.0
 #    - coincidence >=0.2.0
 #    - consolekit >=1.1.2
 #    - requests >=2.25.1
