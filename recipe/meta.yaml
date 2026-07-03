@@ -30,13 +30,15 @@ requirements:
     - packaging >=20.9
     - typing-extensions >=3.7.4.3
 
+# cyclic test dependency (restore test once dependency is in)
+# shippinglabel -> coincidence
+# coincidence -> whey -> shippinglabel
 test:
   source_files:
     - tests
   imports:
     - shippinglabel
   commands:
-    # disable testing in first pass to avoid cyclic dependencies in test (coincidence)
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
 #    # ModuleNotFoundError: No module named 'apeye'
